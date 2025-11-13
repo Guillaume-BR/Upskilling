@@ -88,13 +88,17 @@ drilling_machine_two = {
   "next_maintenance_due": "2025-01-15"
 }
 
-#ajout de la depth_capacity_km
-drilling_machine_two["specifications"]["depth_capacity_km"] = drilling_machine_two["specifications"]["depth_capacity_miles"] * 1609.344
+#changement machine_id
+id_letter, id_number = drilling_machine_two["machine_id"].split("-")
+drilling_machine_two["machine_id"] = f"{id_letter}-{id_number.zfill(3)}"
+print(drilling_machine_two["machine_id"])
+
+#miles->km
+drilling_machine_two["specifications"]["depth_capacity_meters"] = drilling_machine_two["specifications"]["depth_capacity_miles"]*1609
 del(drilling_machine_two["specifications"]["depth_capacity_miles"])
 
-drilling_machine_two["specifications"]["drilling_speed_km_per_day"] = drilling_machine_two["specifications"]["drilling_speed_miles_per_day"] * 1609.344
+drilling_machine_two["specifications"]["drilling_speed_meters_per_day"]=drilling_machine_two["specifications"]["drilling_speed_miles_per_day"]*1609
 del(drilling_machine_two["specifications"]["drilling_speed_miles_per_day"])
-
 
 #ajout des infos
 drilling_machine_two["contact_information"] = {
@@ -104,24 +108,12 @@ drilling_machine_two["contact_information"] = {
     "email": "john.smith@oceanicdrilling.com"
   }
 
-#modification du champ machine_id
-id_letters, id_number = drilling_machine_two["machine_id"].split("-")
-id_number_zfill = id_number.zfill(3)
-machine_id = f"{id_letters}-{id_number_zfill}"
-drilling_machine_two["machine_id"] = machine_id
+#date
 
-#Modification du format de date
-# "/".join(my_list) va transformer my_list en string, en mettant un slash 
-# entre chaque élément de la liste
-last_maintenance_date = "/".join(drilling_machine_two["last_maintenance_date"].split("-")[::-1])
-drilling_machine_two["last_maintenance_date"] = last_maintenance_date
+yyyy,mm,dd = drilling_machine_two["last_maintenance_date"].split("-")
+drilling_machine_two["last_maintenance_date"] = f"{yyyy}/{mm}/{dd}"
 
-next_maintenance_due = drilling_machine_two["next_maintenance_due"]
-yyyy , mm , dd = next_maintenance_due.split("-")
-drilling_machine_two["next_maintenance_due"] = f"{dd}/{mm}/{yyyy}"
+yyyy,mm,dd = drilling_machine_two["next_maintenance_due"].split("-")
+drilling_machine_two["next_maintenance_due"] = f"{yyyy}/{mm}/{dd}"
 
 print(drilling_machine_two)
-
-x,y = "salut ô".split(" ")
-print(x)
-print(y)
