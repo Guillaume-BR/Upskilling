@@ -62,39 +62,5 @@ drilling_machine_two = {
   "next_maintenance_due": "2025-01-15"
 }
 
-def fonction_harmonize_machines(dico : dict) -> dict:
-    #miles -> km
-    dico["specifications"]["depth_capacity_meters"] = dico["specifications"]["depth_capacity_miles"] * 1609
-    dico["specifications"]["drilling_speed_meters_per_day"] = dico["specifications"]["drilling_speed_miles_per_day"] * 1609
-    del(dico["specifications"]["depth_capacity_miles"])
-    del(dico["specifications"]["drilling_speed_miles_per_day"])
 
-    #ajout_info
-    dico["contact_information"] = {
-        "operator_company" : None,
-        "contact_person" : None,
-        "phone" : None,
-        "email" : None,
-    }
-
-    #maintenace date
-    dico["last_maintenance_date"] = "/".join(dico["last_maintenance_date"].split("-")[::-1])
-    dico["next_maintenance_due"] = "/".join(dico["next_maintenance_due"].split("-")[::-1])
-
-    #machine_id
-    letter, number = dico["machine_id"].split("-")
-    dico["machine_id"] = f"{letter} - number.zfill(3)"
-
-    return dico
-
-drilling_machine_two = fonction_harmonize_machines(drilling_machine_two)
-print(drilling_machine_two)
-
-
-my_string = """
-Ceci est une chaine de caractère
-qui tient sur plusieurs lignes
-Essayez de faire ça avec une seule " au début
-et une seule autre " à la fin pour voir !
-"""
 
