@@ -109,11 +109,31 @@ drilling_machine_two["contact_information"] = {
   }
 
 #date
-
-yyyy,mm,dd = drilling_machine_two["last_maintenance_date"].split("-")
-drilling_machine_two["last_maintenance_date"] = f"{yyyy}/{mm}/{dd}"
-
-yyyy,mm,dd = drilling_machine_two["next_maintenance_due"].split("-")
-drilling_machine_two["next_maintenance_due"] = f"{yyyy}/{mm}/{dd}"
+drilling_machine_two["last_maintenance_date"] = "/".join(drilling_machine_two["last_maintenance_date"].split("-"))
+drilling_machine_two["next_maintenance_due"] = "/".join(drilling_machine_two["next_maintenance_due"].split("-"))
 
 print(drilling_machine_two)
+
+drilling_machine_two["location"]["coordinates"] = (drilling_machine_two["location"]["latitude"],drilling_machine_two["location"]["longitude"])
+
+print(drilling_machine_two)
+
+transactions = {
+  "TR1" : "ID001",
+  "TR2" : "ID002",
+  "TR3" : "ID001",
+}
+
+# toutes les transactions qui ont eu lieu cette semaine-ci:
+print(transactions.values())
+
+# pour éviter d'afficher deux fois le"ID001"
+print(set(transactions.values()))
+
+colonnes_excel = ["nom", "prenom", "adresse", "ville", "code_postal"]
+colonnes_excel2 = ["nom", "prenom", "adress", "ville", "postal_code"]
+
+print(set(colonnes_excel) - set(colonnes_excel2))
+print(set(colonnes_excel2) - set(colonnes_excel))
+
+print(set(colonnes_excel).symmetric_difference(colonnes_excel2))
