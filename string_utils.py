@@ -22,6 +22,20 @@ format_machine_id(machine)
     Met sous forme standardisée l'identifiant de la machine (zfill sur 3 chiffres).
 """
 
+from typing import Dict
+
+EXPECTED_KEYS = [
+    "machine_id",
+    "machine_ID",
+    "name",
+    "location",
+    "status",
+    "specifications",
+    "last_maintenance_date",
+    "next_maintenance_due",
+    "contact_information",
+]
+
 
 def convert_miles_km(dico: dict) -> dict:
     """
@@ -44,15 +58,12 @@ def convert_miles_km(dico: dict) -> dict:
     dict
         Updated dictionary with values converted to meters.
     """
-    dico["specifications"]["depth_capacity_meters"] = (
-        dico["specifications"]["depth_capacity_miles"] * 1609
-    )
-    dico["specifications"]["drilling_speed_meters_per_day"] = (
-        dico["specifications"]["drilling_speed_miles_per_day"] * 1609
-    )
-
-    del dico["specifications"]["depth_capacity_miles"]
-    del dico["specifications"]["drilling_speed_miles_per_day"]
+    if "depth_capacity_miles" in dico["specifications"].keys() and "drilling_speed_miles_per_day" in dico["specifications"].keys(): 
+        dico["specifications"]["depth_capacity_meters"] = dico["specifications"]["depth_capacity_miles"] * 1609
+        dico["specifications"]["drilling_speed_meters_per_day"] = dico["specifications"]["drilling_speed_miles_per_day"] * 1609
+        
+        del dico["specifications"]["depth_capacity_miles"]
+        del dico["specifications"]["drilling_speed_miles_per_day"]
 
     return dico
 
@@ -79,12 +90,14 @@ def ajout_info(dico: dict) -> dict:
     dict
         Updated dictionary including the contact information section.
     """
-    dico["contact_information"] = {
-        "operator_company": None,
-        "contact_person": None,
-        "phone": None,
-        "email": None,
-    }
+
+    if "contact_information" not in dico.keys():
+        dico["contact_information"] = {
+            "operator_company": None,
+            "contact_person": None,
+            "phone": None,
+            "email": None,
+        }
     return dico
 
 
@@ -139,10 +152,24 @@ def format_machine_id(machine: dict) -> dict:
     dict
         Updated dictionary with a normalized machine_id.
     """
+    if "machine_id" in machine.keys():
+        id_letters, id_number = machine["machine_id"].split("-")
+        id_number_zfilled = id_number.zfill(3)
 
-    id_letters, id_number = machine["machine_id"].split("-")
-    id_number_zfilled = id_number.zfill(3)
+        machine["machine_id"] = f"{id_letters}-{id_number_zfilled}"
+    else:
+        machine["machine_id"] = machine["machine_ID"]
+        del(machine["machine_ID"])
+        id_letters, id_number = machine["machine_id"].split("-")
+        id_number_zfilled = id_number.zfill(3)
 
-    machine["machine_id"] = f"{id_letters}-{id_number_zfilled}"
+        machine["machine_id"] = f"{id_letters}-{id_number_zfilled}"
 
     return machine
+
+# et on ajoute cette nouvelle fonction à la fin
+def remove_useless_data(dm_dict: Dict) -> Dict:
+    for key in dm_dict.copy().keys():
+        if key not in EXPECTED_KEYS:
+            del dm_dict[key]
+    return dm_dict
