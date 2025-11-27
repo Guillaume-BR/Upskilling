@@ -117,11 +117,6 @@ def update_date(dico: dict) -> dict:
     dico["next_maintenance_due"] = "/".join(
         dico["next_maintenance_due"].split("-")[::-1]
     )
-
-    # Fix machine_id formatting
-    letter, number = dico["machine_id"].split("-")
-    dico["machine_id"] = f"{letter}-{number.zfill(3)}"
-
     return dico
 
 
@@ -144,6 +139,7 @@ def format_machine_id(machine: dict) -> dict:
     dict
         Updated dictionary with a normalized machine_id.
     """
+
     id_letters, id_number = machine["machine_id"].split("-")
     id_number_zfilled = id_number.zfill(3)
 
